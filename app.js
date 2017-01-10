@@ -1,5 +1,7 @@
+//requires npm packet mysql to communicate with local database (you need node and to enter "npm install mysql" in terminal to install)
 var mysql = require("mysql");
 
+//connection info
 var connection = mysql.createConnection({
 	host: "localhost",
 	port: 3306,
@@ -10,10 +12,12 @@ var connection = mysql.createConnection({
 	database: "flashcardapp_db"
 });
 
+//various inputs
 var functionSelector = process.argv[2];
 var userName = process.argv[3];
 var inputWord = process.argv[4];
 
+//function that runs to save new words under a username
 function createNewCard (userName, inputWord) {
 
 	connection.query("INSERT INTO cards (input_word, owned_user) VALUES (?, ?);", [inputWord, userName], function(err, res) {
@@ -26,6 +30,7 @@ function createNewCard (userName, inputWord) {
 
 };
 
+//function that currently displays all words saved under username
 function reviewCards (userName) {
 
 	connection.query("SELECT * FROM cards WHERE owned_user=?", userName, function(err, res) {
@@ -41,6 +46,7 @@ function reviewCards (userName) {
 
 };
 
+//switch to select which function is run
 switch (functionSelector) {
     case "create":
         createNewCard(userName, inputWord);
